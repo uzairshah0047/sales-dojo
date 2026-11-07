@@ -4,7 +4,7 @@ interface MarkProps {
   alt?: string;
 }
 
-export function BrandMark({ className = "h-9 w-9", alt = "Sellio" }: MarkProps) {
+export function BrandMark({ className = "h-9 w-9", alt = "Sales Dojo" }: MarkProps) {
   return (
     <img
       src="/brand/sellio-logo.png"
@@ -19,7 +19,7 @@ export function Wordmark({ className = "" }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <BrandMark className="h-9 w-9" alt="" />
-      <span className="text-[22px] font-extrabold tracking-[-0.045em] text-ink">sellio</span>
+      <span className="text-[22px] font-extrabold tracking-[-0.045em] text-ink">Sales Dojo</span>
     </span>
   );
 }

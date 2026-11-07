@@ -12,7 +12,7 @@ export function TopBar() {
       <div className="shell flex h-[72px] items-center justify-between gap-4">
         <Link
           href="/"
-          aria-label="Sellio – til forsiden"
+          aria-label="Sales Dojo – til forsiden"
           className="rounded-full focus-visible:outline-offset-4"
         >
           <Wordmark />

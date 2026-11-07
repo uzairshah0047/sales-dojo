@@ -1,4 +1,4 @@
-# TODO – Sellio MVP (user flow)
+# TODO – Sales Dojo MVP (user flow)
 
 ## 1. Design system and shared shell
 - [x] Design tokens: accent #ff7300, text #000000 / #2d2c2b / #141313, page #fafafa, surface #ffffff, dark #141313.

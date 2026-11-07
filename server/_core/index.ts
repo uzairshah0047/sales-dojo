@@ -6,6 +6,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { publicPlatformScript } from "./publicConfig";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { sellioRouter } from "../sellio/routes";
 import { serveStatic, setupVite } from "./vite";
 
 async function startServer() {
@@ -19,6 +20,8 @@ async function startServer() {
     res.set("Cache-Control", "no-store").type("application/javascript").send(publicPlatformScript());
   });
   registerOAuthRoutes(app);
+  // Sellio API: customer simulation, sales review and ElevenLabs voice
+  app.use("/api", sellioRouter);
   // tRPC API
   app.use(
     "/api/trpc",

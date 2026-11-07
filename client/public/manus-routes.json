@@ -1,0 +1,8 @@
+{
+  "routes": [
+    { "path": "/", "title": "Hjem" },
+    { "path": "/scenarier", "title": "Kunder" },
+    { "path": "/ovelse/:id", "title": "Samtale" },
+    { "path": "/evaluering", "title": "Salgsgjennomgang" }
+  ]
+}

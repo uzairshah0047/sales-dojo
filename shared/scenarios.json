@@ -1,0 +1,270 @@
+[
+  {
+    "id": "tusen-nei",
+    "mode": "run",
+    "tag": "Flaggskip",
+    "title": "Tusen nei",
+    "customerName": "Kaldt salg",
+    "age": null,
+    "situation": "Ti korte telefonsamtaler på rad. De fleste sier nei.",
+    "difficulty": "rod",
+    "goalLine": "Hold varmen gjennom ti nei",
+    "background": "Dette er ikke én kunde, men en rekke korte oppringinger til små bedrifter. Du ringer fra et telekomselskap og skal prøve å selge en bedriftsavtale på mobil. De fleste sier nei – høflig, stresset, irritert, sarkastisk eller uten et ord. Noen få sier kanskje. Målet er ikke å vinne hver samtale, men å fortsette med energi og nysgjerrighet, og å prøve noe litt bedre hver gang.",
+    "products": [
+      "Bedriftsmobil 10 GB – 149 kr per bruker per måned",
+      "Trådløst kontornett – 399 kr per måned",
+      "Samlet faktura for hele bedriften"
+    ],
+    "callGoal": "Gjennomfør ti samtaler uten å miste varmen. Hvert nei teller som fremgang.",
+    "persona": "Hver samtale er en ny, tilfeldig person med egen tone og eget tempo. Ingen av dem er interessert i en lang presentasjon.",
+    "hiddenNeeds": [
+      "Noen av dem du ringer har faktisk et problem de ikke har fortalt noen om",
+      "De fleste tar avgjørelsen i løpet av de tre første setningene"
+    ],
+    "objections": [
+      "Vi har allerede en leverandør",
+      "Send meg en e-post",
+      "Jeg har ikke tid"
+    ],
+    "buyingConditions": [
+      "Du spør om noe før du presenterer noe",
+      "Du tar et nei med godt humør og uten å presse"
+    ],
+    "patienceStart": 45,
+    "successCondition": "Ti samtaler gjennomført.",
+    "openingLine": "",
+    "voice": "mixed",
+    "avatar": { "skin": "#f3c9a8", "hair": "#2f2a26", "hairStyle": "short", "shirt": "#ffd8bd", "bg": "#ffe8d6" },
+    "callsTarget": 10,
+    "runCustomers": [
+      { "name": "Eli", "mood": "Høflig, men hun har bestemt seg før du er ferdig med setningen.", "temperament": "rolig" },
+      { "name": "Trond", "mood": "Puster tungt, sier han står i en lift og har ett minutt.", "temperament": "stresset" },
+      { "name": "Marit", "mood": "Irritert før du har presentert deg. Har fått tre slike ringer denne uken.", "temperament": "irritert" },
+      { "name": "Sindre", "mood": "Sarkastisk og leken. Liker å sette selgere på prøve.", "temperament": "sarkastisk" },
+      { "name": "Anne", "mood": "Sier nesten ingenting. Venter på at du skal fylle stillheten.", "temperament": "stille" },
+      { "name": "Geir", "mood": "Har vært kunde hos konkurrenten i atten år og ser ingen grunn til å bytte.", "temperament": "lojal" },
+      { "name": "Kamilla", "mood": "Vil bare ha det på e-post, uansett hva du sier.", "temperament": "avvisende" },
+      { "name": "Petter", "mood": "Sier «nei takk» og legger på etter din første setning.", "temperament": "brå" },
+      { "name": "Hanne", "mood": "Nysgjerrig, men skeptisk. Spør deg ut hvis du treffer noe hun kjenner seg igjen i.", "temperament": "nysgjerrig" },
+      { "name": "Ola", "mood": "Sur på telefonselgere generelt og sier det tydelig.", "temperament": "hissig" },
+      { "name": "Ingrid", "mood": "Sier «kanskje» og mener det faktisk, hvis du gir henne en grunn.", "temperament": "åpen" },
+      { "name": "Frode", "mood": "Tuller det bort. Ler, men avslutter likevel.", "temperament": "morsom" }
+    ]
+  },
+  {
+    "id": "nytt-abonnement",
+    "mode": "single",
+    "title": "Første abonnement",
+    "customerName": "Sara Nilsen",
+    "age": 19,
+    "situation": "Student som skal ha sitt første egne abonnement",
+    "difficulty": "gronn",
+    "goalLine": "Få Sara til å velge et abonnement",
+    "background": "Sara er 19 år og har akkurat flyttet hjemmefra for å studere i Trondheim. Hun har arvet et gammelt abonnement fra moren, men aner ikke hva hun egentlig betaler for. Hun er hyggelig, litt sjenert og svarer kort når hun blir usikker.",
+    "products": [
+      "Ung 15 GB – 249 kr/mnd",
+      "Ung 30 GB – 329 kr/mnd",
+      "Ekstra datapakke 5 GB – 79 kr"
+    ],
+    "callGoal": "Hjelp Sara til å velge et abonnement som passer studielivet, og få avtalen på plass i dag.",
+    "persona": "19 år, student. Vennlig og litt sjenert. Svarer kort når hun er usikker, men blir engasjert hvis du spør om noe hun faktisk bryr seg om.",
+    "hiddenNeeds": [
+      "Strømmer mye video på mobilen og er redd for å gå tom for data",
+      "Vil ikke binde seg i tolv måneder",
+      "Ringer mye med moren og vil slippe å tenke på prisen"
+    ],
+    "objections": [
+      "Jeg må tenke på det",
+      "Er det ikke billigere hos noen andre?"
+    ],
+    "buyingConditions": [
+      "Hun vet at hun ikke går tom for data",
+      "Ingen bindingstid",
+      "Prisen er under 300 kroner"
+    ],
+    "patienceStart": 85,
+    "successCondition": "Kunden sier ja til et abonnement.",
+    "openingLine": "Hei … jeg ringte egentlig bare for å sjekke. Jeg har liksom ikke helt peiling på hva jeg betaler for nå.",
+    "voice": "female",
+    "avatar": { "skin": "#f6d3b8", "hair": "#7a4a2b", "hairStyle": "long", "shirt": "#dcefe2", "bg": "#dcefe2" }
+  },
+  {
+    "id": "bytte-leverandor",
+    "mode": "single",
+    "title": "Bytte leverandør",
+    "customerName": "Morten Berg",
+    "age": 41,
+    "situation": "Familiefar som sammenligner familieabonnement",
+    "difficulty": "gul",
+    "goalLine": "Få familien over til dere",
+    "background": "Morten er 41, jobber i byggebransjen og har to barn på 10 og 14. Familien har fire abonnementer hos en konkurrent. Han er lojal av vane, men irriterer seg over at regningen har økt hvert år. Han er travel, snakker fort og hopper over høflighetsfraser.",
+    "products": [
+      "Familie 4 abonnement – 899 kr/mnd samlet",
+      "Trygghetsforsikring – 49 kr/mnd per abonnement",
+      "Fri familiesamtale mellom abonnementene"
+    ],
+    "callGoal": "Forstå hva familien faktisk bruker, og få en avtale om å bytte.",
+    "persona": "41 år, praktisk anlagt og effektiv. Blir utålmodig av lange forklaringer. Liker konkrete tall og raske svar.",
+    "hiddenNeeds": [
+      "Yngste barnet har begynt å bruke mye data, og de har fått to sjokkregninger",
+      "Vil ha bedre dekning på hytta i Trysil"
+    ],
+    "objections": [
+      "Vi har vært kunder der i ti år",
+      "Bindingstid gidder jeg ikke"
+    ],
+    "buyingConditions": [
+      "En konkret prissammenligning",
+      "Dekning på hytta bekreftet",
+      "Ingen bindingstid"
+    ],
+    "patienceStart": 55,
+    "successCondition": "Kunden sier ja til å bytte.",
+    "openingLine": "Ja, hei. Jeg har fem minutter. Hva er dette?",
+    "voice": "male",
+    "avatar": { "skin": "#e8b892", "hair": "#3b2f28", "hairStyle": "short", "shirt": "#ffe8d6", "bg": "#ffe8d6" }
+  },
+  {
+    "id": "oppgradering",
+    "mode": "single",
+    "title": "Oppgradering",
+    "customerName": "Ida Lund",
+    "age": 34,
+    "situation": "Eksisterende kunde som går tom for data hver måned",
+    "difficulty": "gul",
+    "goalLine": "Få Ida til å oppgradere",
+    "background": "Ida er 34, jobber som sykepleier og pendler. Hun har 10 GB og går tom rundt den 20. hver måned. Hun liker deg som person, men er skeptisk til å betale mer enn hun gjør i dag.",
+    "products": [
+      "Pluss 30 GB – 399 kr/mnd",
+      "Pluss 50 GB – 449 kr/mnd"
+    ],
+    "callGoal": "Vis at oppgradering er billigere enn alle ekstra datapakkene, og gjennomfør endringen.",
+    "persona": "34 år, varm og snakkesalig, men prisbevisst. Sier «ja, men» når hun er i tvil, og trenger tid på å lande.",
+    "hiddenNeeds": [
+      "Betaler 79 kroner for ekstra datapakke flere ganger i måneden uten å tenke over det",
+      "Vil kunne se serier i lunsjpausen"
+    ],
+    "objections": [
+      "Det blir jo dyrere",
+      "Jeg klarer meg egentlig greit"
+    ],
+    "buyingConditions": [
+      "Regnestykket viser at hun sparer",
+      "Hun kan endre uten bindingstid"
+    ],
+    "patienceStart": 62,
+    "successCondition": "Kunden godtar et større abonnement.",
+    "openingLine": "Hei! Så hyggelig at du ringer. Jeg tenkte faktisk på det med data … jeg går alltid tom.",
+    "voice": "female",
+    "avatar": { "skin": "#d9a87f", "hair": "#1f1a17", "hairStyle": "bun", "shirt": "#ece5ff", "bg": "#ece5ff" }
+  },
+  {
+    "id": "fiber",
+    "mode": "single",
+    "title": "Fiber i ny leilighet",
+    "customerName": "Henrik Dahl",
+    "age": 29,
+    "situation": "Par som flytter inn i ny leilighet",
+    "difficulty": "gul",
+    "goalLine": "Få booket installasjonen",
+    "background": "Henrik og kona flytter inn i en ny leilighet om tre uker. Han ringer for å sjekke mulighetene, men har også snakket med en annen leverandør. Han er hyggelig og ryddig, men bestemmer ingenting før han har sammenlignet.",
+    "products": [
+      "Fiber 500 – 599 kr/mnd",
+      "Fiber 1000 – 749 kr/mnd",
+      "Installasjon 0 kr ved 12 måneders binding"
+    ],
+    "callGoal": "Få booket en installasjon før innflytting.",
+    "persona": "29 år, ingeniør. Ryddig og analytisk. Stiller oppfølgingsspørsmål og liker at detaljer er presise.",
+    "hiddenNeeds": [
+      "Jobber hjemmefra to dager i uken og er avhengig av en stabil linje",
+      "Kona jobber med video og har hatt problemer med dårlig nett"
+    ],
+    "objections": [
+      "Jeg må sammenligne litt",
+      "Vi har ikke internett før vi flytter inn"
+    ],
+    "buyingConditions": [
+      "Stabil hastighet bekreftet",
+      "Installasjon før innflytting",
+      "Kan avtales uten lang bindingstid"
+    ],
+    "patienceStart": 65,
+    "successCondition": "Kunden booker installasjon.",
+    "openingLine": "Hei. Vi flytter inn i en ny leilighet om tre uker, og jeg lurer på hva dere kan levere der.",
+    "voice": "male",
+    "avatar": { "skin": "#f0c4a0", "hair": "#8a6a4f", "hairStyle": "curly", "shirt": "#fff3c4", "bg": "#fff3c4" }
+  },
+  {
+    "id": "bedrift",
+    "mode": "single",
+    "title": "Bedriftsavtale",
+    "customerName": "Rune Solberg",
+    "age": 52,
+    "situation": "Daglig leder som er lojal mot konkurrenten",
+    "difficulty": "rod",
+    "goalLine": "Få et møte eller en prøveperiode",
+    "background": "Rune driver et rørleggerfirma med 14 ansatte. Han har hatt samme leverandør i tolv år og har ikke tid til deg. Ringer du midt i arbeidsdagen, er han kort. Han har dårlige erfaringer med selgere som lover for mye.",
+    "products": [
+      "Bedrift 15 – 199 kr per bruker/mnd",
+      "Fastpris datasentral",
+      "Prøveperiode i 30 dager"
+    ],
+    "callGoal": "Få et møte eller en prøveperiode på plass.",
+    "persona": "52 år, eier. Direkte og skeptisk. Avbryter hvis du bruker for mange ord. Har null toleranse for påstander du ikke kan dokumentere.",
+    "hiddenNeeds": [
+      "Har ansatte som ringer kunder fra utlandet og får uforståelige regninger",
+      "Vurderer å bytte, men vil ikke innrømme det"
+    ],
+    "objections": [
+      "Vi er fornøyd med det vi har",
+      "Jeg har ikke tid",
+      "Dere selgere lover alltid mer enn dere holder"
+    ],
+    "buyingConditions": [
+      "Dokumenterbar besparelse",
+      "Et kort møte som respekterer tiden hans"
+    ],
+    "patienceStart": 26,
+    "successCondition": "Kunden sier ja til et møte eller en prøveperiode.",
+    "openingLine": "Solberg. Hvem er dette, og hvor lang tid tar det?",
+    "voice": "male",
+    "avatar": { "skin": "#d8a882", "hair": "#b9b2a8", "hairStyle": "short", "shirt": "#e6eef5", "bg": "#e6eef5" }
+  },
+  {
+    "id": "oppsigelse",
+    "mode": "single",
+    "title": "Oppsigelse",
+    "customerName": "Nina Haugen",
+    "age": 38,
+    "situation": "Frustrert kunde som vil si opp",
+    "difficulty": "rod",
+    "goalLine": "Få Nina til å bli kunde",
+    "background": "Nina er 38 og har hatt tre feil på fakturaen og sittet to timer i telefonkø. Hun ringer for å si opp, og er sint før du har sagt hei. Hun vil bli hørt, ikke overtalt.",
+    "products": [
+      "Samme abonnement med 6 måneders rabatt",
+      "Ny fakturaoversikt",
+      "Direkte nummer til en fast saksbehandler"
+    ],
+    "callGoal": "Få Nina til å bli kunde – eller i det minste gi deg en sjanse til å rette opp.",
+    "persona": "38 år, lærer. Sliten og sint. Blir roligere hvis hun føler seg hørt, og hardere hvis du forsvarer selskapet.",
+    "hiddenNeeds": [
+      "Vil egentlig ikke bytte, hun vil at noen tar ansvar",
+      "Er redd for at neste faktura også blir feil"
+    ],
+    "objections": [
+      "Jeg har bestemt meg",
+      "Dette har skjedd tre ganger",
+      "Jeg har ikke tid til dette"
+    ],
+    "buyingConditions": [
+      "En konkret innrømmelse av feilen",
+      "En løsning som varer",
+      "Ingen nye bindinger"
+    ],
+    "patienceStart": 20,
+    "successCondition": "Kunden godtar å bli kunde.",
+    "openingLine": "Hei, jeg vil si opp abonnementet mitt. Med en gang.",
+    "voice": "female",
+    "avatar": { "skin": "#eec2a2", "hair": "#4a3527", "hairStyle": "long", "shirt": "#ffe0e0", "bg": "#ffe0e0" }
+  }
+]

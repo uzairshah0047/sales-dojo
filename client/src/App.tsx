@@ -4,36 +4,44 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { TopBar } from "./components/TopBar";
+import { VoiceProvider } from "./lib/voice";
+import { ConversationProvider } from "./state/ConversationContext";
 import Home from "./pages/Home";
+import Scenarios from "./pages/Scenarios";
+import Simulation from "./pages/Simulation";
+import Evaluation from "./pages/Evaluation";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/scenarier"} component={Scenarios} />
+      <Route path={"/ovelse/:id"} component={Simulation} />
+      <Route path={"/evaluering"} component={Evaluation} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+      <ThemeProvider defaultTheme="light">
+        <VoiceProvider>
+          <ConversationProvider>
+            <TooltipProvider>
+              <Toaster />
+              <div className="flex min-h-dvh flex-col bg-page">
+                <TopBar />
+                <main className="flex-1">
+                  <Router />
+                </main>
+              </div>
+            </TooltipProvider>
+          </ConversationProvider>
+        </VoiceProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

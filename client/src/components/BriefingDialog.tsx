@@ -56,6 +56,25 @@ export function BriefingDialog({ scenario, open, onOpenChange, onBegin }: Briefi
             </ul>
           </section>
 
+          {scenario.behaviorProfile && (
+            <section className="rounded-2xl border border-line bg-page/70 px-4 py-4">
+              <h3 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-mute">
+                Slik møter du kunden
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
+                {scenario.behaviorProfile.corePattern}
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                {scenario.behaviorProfile.deescalationPattern.slice(0, 3).map(rule => (
+                  <li key={rule} className="flex items-start gap-2 text-[13.5px] leading-relaxed text-ink-soft">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                    {rule}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           <section className="rounded-2xl bg-brand-soft px-4 py-3.5">
             <h3 className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#a85300]">
               <Target className="h-3.5 w-3.5" strokeWidth={2.4} />

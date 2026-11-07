@@ -10,6 +10,7 @@
 ## 2. Scenario library (single JSON data file)
 - [x] 6 placeholder telecom scenarios: new mobile subscription (student, Grønn), switching provider (parent, Gul), plan upgrade (existing customer, Gul), home fibre (couple, Gul), business package (owner loyal to competitor, Rød), retention call (frustrated customer, Rød).
 - [x] Flagship scenario "Tusen nei": run of short cold calls, most customers say no in different ways, 10 calls target, browser-persisted visible counter "Nei samlet: 0 / 1000".
+- [x] Tusen nei has a detailed identity-independent behavioral profile: the customer protects time and control, reacts causally to listening, pressure, honesty and boundary violations, escalates through clear stages, reveals needs in small pieces, and uses varied refusal styles while staying consistent. Name and age are randomly generated for each contact.
 - [x] Each scenario carries persona, situation, difficulty, goal line, background, products, call goal, hidden needs, objections, buying conditions, patience start and success condition.
 
 ## 3. Home

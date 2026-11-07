@@ -18,8 +18,25 @@ export interface AvatarConfig {
 
 export interface RunCustomer {
   name: string;
+  age: number;
   mood: string;
   temperament: string;
+  trigger: string;
+  openingStyle: string;
+  patienceBias: number;
+}
+
+export interface TusenNeiBehaviorProfile {
+  corePattern: string;
+  motivations: string[];
+  defaultState: string;
+  reactionRules: string[];
+  escalationPattern: string[];
+  deescalationPattern: string[];
+  refusalStyles: string[];
+  curiositySignals: string[];
+  hardBoundaries: string[];
+  consistencyRules: string[];
 }
 
 export interface Scenario {
@@ -45,6 +62,7 @@ export interface Scenario {
   voice: VoiceGender;
   avatar: AvatarConfig;
   callsTarget?: number;
+  behaviorProfile?: TusenNeiBehaviorProfile;
   runCustomers?: RunCustomer[];
 }
 
@@ -213,7 +231,7 @@ export interface ChatRequest {
   scenarioId: string;
   messages: { role: Speaker; text: string }[];
   state: ChatTurnState;
-  runCustomer?: { name: string; mood: string; temperament: string } | null;
+  runCustomer?: RunCustomer | null;
 }
 
 export interface ChatResponse {

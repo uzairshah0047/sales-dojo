@@ -9,8 +9,12 @@ import type {
 
 interface RunCustomer {
   name: string;
+  age: number;
   mood: string;
   temperament: string;
+  trigger: string;
+  openingStyle: string;
+  patienceBias: number;
 }
 
 const list = (items: string[]) => items.map(item => `- ${item}`).join("\n");
@@ -22,7 +26,7 @@ export function buildCustomerSystemPrompt(
 ): string {
   const run = scenario.mode === "run";
   const person = run
-    ? `Du er ${runCustomer?.name ?? "en tilfeldig person"} som tar telefonen på jobb. ${runCustomer?.mood ?? ""} Temperament: ${runCustomer?.temperament ?? "vanlig"}.`
+    ? `Du er ${runCustomer?.name ?? "en tilfeldig person"}, ${runCustomer?.age ?? "ukjent"} år, som tar telefonen på jobb. Navnet og alderen er tilfeldig overflate; ikke la dem styre atferden. ${runCustomer?.mood ?? ""} Temperament: ${runCustomer?.temperament ?? "vanlig"}. Trigger: ${runCustomer?.trigger ?? "ingen særskilt trigger"}. Åpningsstil: ${runCustomer?.openingStyle ?? "kort og avventende"}.`
     : `Du er ${scenario.customerName}${scenario.age ? `, ${scenario.age} år` : ""}.`;
 
   return `Du spiller en kunde i en norsk salgstrening for telekomselgere. Du er et menneske, ikke en assistent.
@@ -31,6 +35,25 @@ HVEM DU ER
 ${person}
 ${run ? "Du er oppringt av en selger du ikke kjenner. Du har ikke bedt om denne samtalen." : `Situasjon: ${scenario.situation}`}
 Personlighet: ${scenario.persona}
+
+${run && scenario.behaviorProfile ? `DETTE ER DEN FASTE ATFERDSPROFILEN FOR «TUSEN NEI»
+Kjernemønster: ${scenario.behaviorProfile.corePattern}
+Grunnmotiver: ${list(scenario.behaviorProfile.motivations)}
+Starttilstand: ${scenario.behaviorProfile.defaultState}
+Reaksjonsregler – følg disse kausalt, ikke tilfeldig:
+${list(scenario.behaviorProfile.reactionRules)}
+Eskalering ved dårlig salg:
+${list(scenario.behaviorProfile.escalationPattern)}
+Avspenning ved god håndtering:
+${list(scenario.behaviorProfile.deescalationPattern)}
+Måter å si nei på:
+${list(scenario.behaviorProfile.refusalStyles)}
+Signaler på ekte nysgjerrighet:
+${list(scenario.behaviorProfile.curiositySignals)}
+Harde grenser:
+${list(scenario.behaviorProfile.hardBoundaries)}
+Konsistensregler:
+${list(scenario.behaviorProfile.consistencyRules)}` : ""}
 
 DET SELGEREN IKKE VET (skjulte behov – avslør bare biter, og bare hvis selgeren spør konkret og viser at de lytter):
 ${list(scenario.hiddenNeeds)}
@@ -63,6 +86,7 @@ SLIK REAGERER DU
 - patienceDelta skal nesten aldri være 0. Bare en ren hilsen eller en helt nøytral replikk kan gi 0. Hver replikk fra selgeren flytter deg enten opp eller ned – vær tydelig.
 - Tålmodigheten slites over tid: etter fem–seks replikker uten at selgeren har truffet noe du bryr deg om, skal den ha sunket merkbart.
 ${run ? "- Du er oppringt ubedt. De fleste sier nei raskt. Si nei på din egen måte innen 1–3 replikker, med mindre selgeren treffer noe du faktisk bryr deg om. Da kan du bli nysgjerrig i stedet.\n- Når du sier nei, avslutt samtalen (ended=true) med mindre du fortsatt er nysgjerrig." : ""}
+${run ? "- I «Tusen nei» skal du følge atferdsprofilen over. Et nei er en reell grense, ikke en leksehjelp til selgeren. Du skal ikke mykne bare for å være hyggelig.\n- Hvis selgeren håndterer avslaget respektfullt, kan du gi ett konkret hvorfor eller ett motspørsmål, men ikke hele behovet.\n- Ikke gjenta samme formulering mekanisk fra samtale til samtale; velg en refusjonsstil som passer temperamentet.\n- Når du sier nei og ikke viser nysgjerrighet, avslutt samtalen (ended=true)." : ""}
 
 NÅR SAMTALEN SLUTTER (du bestemmer, ikke selgeren)
 - Du sier ja (ended=true, outcome="closed") når kjøpsbetingelsene dine er oppfylt og du føler deg trygg.
@@ -86,8 +110,13 @@ export function buildRunOpeningPrompt(
   callIndex: number
 ): string {
   return `Du spiller ${runCustomer.name}, en person som tar telefonen på jobb i en norsk salgstrening.
-${runCustomer.mood} Temperament: ${runCustomer.temperament}.
-Dette er samtale ${callIndex} av ${scenario.callsTarget ?? 10} i en rekke korte, uventede salgsoppringinger om bedriftsmobil.
+    ${runCustomer.mood} Temperament: ${runCustomer.temperament}. Trigger: ${runCustomer.trigger}. Åpningsstil: ${runCustomer.openingStyle}.
+Dette er samtale ${callIndex} av ${scenario.callsTarget ?? 10} i en rekke korte, uventede salgsoppringinger om bedriftsmobil. Navnet og alderen din er tilfeldig overflate; følg den faste atferdsprofilen for Tusen nei i stedet for å spille en biografi.
+
+${scenario.behaviorProfile ? `KJERNEMØNSTER: ${scenario.behaviorProfile.corePattern}
+REAKSJONSREGLER:
+${list(scenario.behaviorProfile.reactionRules)}
+ÅPNINGEN DIN SKAL FØLGE VARIANTEN: ${runCustomer.openingStyle}` : ""}
 
 Du har nettopp tatt telefonen. Skriv din første replikk: kort, naturlig norsk, 1–2 setninger. Ikke hils som en selger. Du vet ikke hvem som ringer.
 Svar med JSON: {"reply": "...", "interest": <0-100>, "patienceDelta": 0, "ended": false, "outcome": "none", "endReason": ""}`;
@@ -130,6 +159,10 @@ UTFALL: ${outcome} (closed = avtale i havn, lost = tapt, open = uavklart)
 TÅLMODIGHET VED SLUTT: ${patience}/100
 KJØPSINTERESSE VED SLUTT: ${interest}/100
 ${isRun ? `ANTALL SAMTALER: ${params.callsCompleted ?? 0} av ${scenario.callsTarget ?? 10}. NEI SAMLET I ØKTEN: ${params.nos ?? 0}.` : ""}
+${isRun && scenario.behaviorProfile ? `
+TUSEN NEI – ATFERDSPROFILEN SOM SKAL BRUKES I VURDERINGEN:
+${scenario.behaviorProfile.corePattern}
+Vurder særlig om selgeren: utforsket hvorfor kunden sa nei, respekterte harde grenser, justerte energi og tempo, og klarte å være nysgjerrig uten å bli pågående. Ikke gi uttelling for å «vinne» en kunde som tydelig ville avslutte.` : ""}
 
 TRANSKRIPSJON (indeksen #n er den du skal referere til):
 ${transcript}

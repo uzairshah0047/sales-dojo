@@ -95,7 +95,7 @@ export default function Simulation() {
 
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-[16px] font-bold leading-tight sm:text-[17px]">
-              {customerName}
+              {customerName}{isRun && callCustomer?.age ? `, ${callCustomer.age}` : ""}
             </h1>
             <div className="mt-1 flex min-w-0 items-center gap-1.5">
               {isRun ? (

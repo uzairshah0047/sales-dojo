@@ -79,6 +79,36 @@ function shuffle<T>(items: T[]): T[] {
   return copy;
 }
 
+const RUN_FIRST_NAMES = [
+  "Eli", "Trond", "Marit", "Sindre", "Anne", "Geir", "Kamilla", "Petter",
+  "Hanne", "Ola", "Ingrid", "Frode", "Maja", "Jon", "Heidi", "Arild",
+  "Nora", "Thomas", "Liv", "Bjørn", "Silje", "Kjetil", "Ragnhild", "Pål",
+];
+
+const RUN_LAST_NAMES = [
+  "Berg", "Dahl", "Haugen", "Solberg", "Nilsen", "Lund", "Moen", "Aas",
+  "Rønning", "Hansen", "Eide", "Lie", "Bakke", "Sæther", "Vik", "Strand",
+];
+
+function randomRunCustomer(template: RunCustomer, usedNames: Set<string>): RunCustomer {
+  let name = "";
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    const first = RUN_FIRST_NAMES[Math.floor(Math.random() * RUN_FIRST_NAMES.length)];
+    const last = RUN_LAST_NAMES[Math.floor(Math.random() * RUN_LAST_NAMES.length)];
+    const candidate = `${first} ${last}`;
+    if (!usedNames.has(candidate)) {
+      name = candidate;
+      usedNames.add(candidate);
+      break;
+    }
+  }
+  return {
+    ...template,
+    name: name || "En tilfeldig kunde",
+    age: 24 + Math.floor(Math.random() * 39),
+  };
+}
+
 function initialState(): ConversationState {
   return {
     scenarioId: null,
@@ -425,7 +455,10 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
       if (scenario.mode === "run") {
         const target = scenario.callsTarget ?? 10;
-        const queue = shuffle(scenario.runCustomers ?? []).slice(0, target);
+        const usedNames = new Set<string>();
+        const queue = shuffle(scenario.runCustomers ?? [])
+          .slice(0, target)
+          .map(template => randomRunCustomer(template, usedNames));
         const first = queue[0] ?? null;
         const divider: TranscriptMessage = {
           id: uid(),

@@ -28,7 +28,6 @@ const STEPS = [
 
 function HeroChat() {
   const morten = getScenario("bytte-leverandor");
-  const nina = getScenario("oppsigelse");
 
   return (
     <div className="relative mx-auto w-full max-w-[440px]">
@@ -74,7 +73,7 @@ function HeroChat() {
         </div>
       </div>
 
-      <div className="card-soft animate-float-slow absolute -bottom-16 -left-20 z-20 hidden w-[210px] p-4 sm:block">
+      <div className="card-soft animate-float-slow absolute -bottom-12 -right-10 z-20 hidden w-[208px] p-4 sm:block">
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-mute">
           Trekk 3
         </p>
@@ -86,11 +85,6 @@ function HeroChat() {
         </p>
       </div>
 
-      <div className="absolute -right-3 top-6 z-20 hidden sm:block">
-        <div className="flex h-16 w-16 animate-breathe items-center justify-center rounded-full bg-white shadow-[0_18px_30px_-20px_rgba(20,19,19,0.5)]">
-          {nina && <Avatar config={nina.avatar} className="h-12 w-12" />}
-        </div>
-      </div>
     </div>
   );
 }

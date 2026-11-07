@@ -116,11 +116,12 @@ export default function Simulation() {
             <button
               type="button"
               onClick={() => setEndOpen(true)}
-              className="pill-outline !px-3.5 !py-2 text-[13.5px] sm:!px-4 sm:!py-2.5"
+              aria-label="Avslutt og få tilbakemelding"
+              title="Avslutt og få tilbakemelding"
+              className="pill-outline !px-3 !py-2 text-[13.5px] sm:!px-4 sm:!py-2.5"
             >
               <Flag className="h-3.5 w-3.5" strokeWidth={2.4} />
               <span className="hidden sm:inline">Avslutt og få tilbakemelding</span>
-              <span className="sm:hidden">Avslutt</span>
             </button>
           </div>
         </div>

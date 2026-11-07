@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { ArrowRight, Check, Home as HomeIcon, RotateCcw, Shuffle } from "lucide-react";
 import { MOVE_META, MOVE_ORDER, type Outcome } from "@shared/sellio";
 import { useConversation } from "@/state/ConversationContext";
-import { BlobMark } from "@/components/Brand";
+import { BrandMark } from "@/components/Brand";
 import { Avatar } from "@/components/Avatar";
 import { OutcomePill, ScoreRing, StatChip } from "@/components/eval/ScoreRing";
 import { MomentumChart } from "@/components/eval/MomentumChart";
@@ -22,8 +22,8 @@ function AnalysingState() {
     <div className="flex min-h-[calc(100dvh-72px)] flex-col items-center justify-center px-6 text-center">
       <div className="relative mb-8">
         <div className="absolute inset-0 animate-ping rounded-full bg-brand/20" />
-        <div className="relative flex h-24 w-24 animate-breathe items-center justify-center rounded-full bg-brand-soft">
-          <BlobMark className="h-14 w-14" />
+        <div className="relative flex h-24 w-24 animate-breathe items-center justify-center rounded-full bg-brand-soft p-2.5">
+          <BrandMark className="h-full w-full" alt="" />
         </div>
       </div>
       <h1 className="text-[26px] font-extrabold sm:text-[32px]">Analyserer samtalen …</h1>
@@ -413,8 +413,8 @@ export default function Evaluation() {
       <section className="shell mt-6">
         <div className="flex flex-col items-start gap-6 rounded-[30px] border border-line bg-white px-5 py-7 sm:flex-row sm:items-center sm:px-9">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-soft">
-              <BlobMark className="h-9 w-9" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-soft p-1.5">
+              <BrandMark className="h-full w-full" alt="" />
             </div>
             <p className="max-w-[52ch] text-[15.5px] font-medium leading-relaxed text-ink">
               {evaluation.closingNote ||

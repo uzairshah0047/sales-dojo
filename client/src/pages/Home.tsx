@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { ArrowRight, ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
-import { BlobMark } from "@/components/Brand";
+import { BrandMark } from "@/components/Brand";
 import { MoveBadge } from "@/components/Badges";
 import { getScenario, scenarios } from "@shared/sellio";
 
@@ -369,8 +369,8 @@ export default function Home() {
                     Hvert nei teller som fremgang. Telleren følger deg mellom øktene.
                   </p>
                 </div>
-                <div className="absolute -right-2 -top-6 hidden h-14 w-14 animate-breathe items-center justify-center rounded-full bg-white sm:flex">
-                  <BlobMark className="h-10 w-10" tone="cream" />
+                <div className="absolute -right-3 -top-7 hidden h-16 w-16 animate-breathe items-center justify-center rounded-full bg-white p-1.5 shadow-[0_18px_30px_-18px_rgba(0,0,0,0.7)] sm:flex">
+                  <BrandMark className="h-full w-full" alt="" />
                 </div>
               </div>
             </div>

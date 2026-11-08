@@ -6,8 +6,8 @@ import {
   PHASE_ORDER,
   type ChatRequest,
   type ChatResponse,
-  type EvaluateRequest,
   type Evaluation,
+  type EvaluateRequest,
   type Outcome,
   type Scenario,
 } from "../../shared/sellio";
@@ -91,6 +91,78 @@ const TURN_SCHEMA = {
 
 function fallbackOpening(scenario: Scenario): string {
   return scenario.openingLine || "Hei?";
+}
+
+function offlineChatResponse(
+  scenario: Scenario,
+  state: { patience: number; interest: number; callIndex: number },
+  messages: ChatRequest["messages"],
+  runCustomer: ChatRequest["runCustomer"]
+): ChatResponse {
+  const userTurns = messages.filter(message => message.role === "user");
+  const latest = userTurns.at(-1)?.text.toLowerCase() ?? "";
+  const asksQuestion = /\?|hvordan|hva|hvorfor|hvilke|kan du fortelle/.test(latest);
+  const pushesProduct = /pris|tilbud|pakke|abonnement|10 gb|399|149/.test(latest);
+  const pushesPastNo = /men|likevel|bare|du må|du burde|sikker på/.test(latest);
+  const respectful = /skjønner|forstår|helt greit|respekterer|takk for/.test(latest);
+  const delta = asksQuestion && respectful ? 5 : pushesProduct || pushesPastNo ? -9 : asksQuestion ? 2 : -3;
+  const patience = clamp(state.patience + delta);
+  const ended = patience <= 8 || (userTurns.length >= 3 && (pushesPastNo || !asksQuestion));
+  const outcome: Outcome = ended ? "lost" : "none";
+
+  if (userTurns.length === 0) {
+    return {
+      reply: runCustomer?.openingStyle?.replace(/^Svar med /i, "") || fallbackOpening(scenario),
+      interest: state.interest,
+      patience: state.patience,
+      patienceDelta: 0,
+      ended: false,
+      outcome: "none",
+      endReason: "",
+    };
+  }
+
+  let reply = "Mhm. Hva er det konkret du mener?";
+  if (ended) reply = runCustomer?.temperament === "hissig" ? "Nei, dette har jeg ikke tid til. Ha det." : "Jeg tror vi stopper her. Ha en fin dag.";
+  else if (respectful && asksQuestion) reply = "Greit, det setter jeg pris på. Det som er vanskelig hos oss er egentlig å vite hva vi betaler for."
+  else if (pushesProduct) reply = "Det høres ut som en vanlig salgspresentasjon. Hvorfor skulle dette være relevant for oss?";
+  else if (asksQuestion) reply = "Det kommer an på hva du faktisk kan hjelpe med. Hva er forskjellen fra det vi har i dag?";
+  else if (userTurns.length === 1) reply = "Jeg har ikke tid til en lang presentasjon. Hva gjelder det helt konkret?";
+
+  return {
+    reply,
+    interest: clamp(state.interest + (asksQuestion && respectful ? 8 : pushesProduct ? -8 : 1)),
+    patience,
+    patienceDelta: patience - state.patience,
+    ended,
+    outcome,
+    endReason: ended ? "Kunden avsluttet samtalen." : "",
+  };
+}
+
+function offlineEvaluation(body: EvaluateRequest, messages: EvaluateRequest["messages"]): Evaluation {
+  const userMessages = messages.filter(message => message.role === "user");
+  const moves = userMessages.map((message, order) => {
+    const text = message.text.toLowerCase();
+    const label = /\?|hvordan|hva|hvorfor/.test(text) ? "good" : /pris|tilbud|abonnement/.test(text) ? "inaccuracy" : "book";
+    return { index: order, label: label as Evaluation["moves"][number]["label"], why: label === "good" ? "Du åpnet for dialog med et spørsmål." : "Dette trekket ga kunden lite rom til å dele behovet sitt." };
+  });
+  const tally = Object.fromEntries(MOVE_ORDER.map(label => [label, moves.filter(move => move.label === label).length]));
+  const momentum = userMessages.map((_, index) => ({ index, value: clamp(42 + index * 3 + (moves[index]?.label === "good" ? 10 : 0)) }));
+  const score = clamp(50 + moves.filter(move => move.label === "good").length * 8 - moves.filter(move => move.label === "inaccuracy").length * 5);
+  return {
+    accuracy: score,
+    outcome: body.outcome === "closed" ? "closed" : body.outcome === "lost" ? "lost" : "open",
+    summary: "Dette er en lokal gjennomgang fordi AI-kvoten er brukt opp. Den vurderer spørsmål, relevans og respekt for kundens tid.",
+    tally,
+    momentum,
+    phases: PHASE_ORDER.map((key, index) => ({ key, score: clamp(score + (index === 1 ? 5 : 0) - index * 2), verdict: index === 1 ? "Her har du mest å hente." : "Et greit utgangspunkt." })),
+    moves,
+    keyMoments: moves.slice(0, 3).map((move, index) => ({ index: move.index, label: move.label, from: momentum[index]?.value ?? 40, to: momentum[index]?.value ?? 40, why: move.why, better: "Hva er viktigst for dere akkurat nå?", betterWhy: "Et åpent spørsmål gir kunden rom til å vise behovet." })),
+    focus: ["Still ett godt spørsmål før du presenterer produktet.", "Vis at du hørte kundens innvending.", "Avslutt respektfullt når kunden setter en tydelig grense."],
+    closingNote: "Du kan fortsette å trene uten AI-kvote. Når kvoten er tilbake, får du en mer nyansert gjennomgang.",
+    patienceEvents: userMessages.map((_, index) => ({ index, delta: index === 0 ? -3 : 0, reason: "Lokal heuristisk vurdering." })),
+  };
 }
 
 const router = express.Router();
@@ -212,10 +284,7 @@ router.post("/chat", async (req, res) => {
     } satisfies ChatResponse);
   } catch (error) {
     console.error("[sellio] chat failed:", error);
-    res.status(502).json({
-      error: "chat_failed",
-      message: error instanceof Error ? error.message : "Ukjent feil",
-    });
+    res.json(offlineChatResponse(scenario, state, messages, body.runCustomer));
   }
 });
 
@@ -377,10 +446,7 @@ router.post("/evaluate", async (req, res) => {
     res.json(evaluation);
   } catch (error) {
     console.error("[sellio] evaluate failed:", error);
-    res.status(502).json({
-      error: "evaluate_failed",
-      message: error instanceof Error ? error.message : "Ukjent feil",
-    });
+    res.json(offlineEvaluation(body, messages));
   }
 });
 

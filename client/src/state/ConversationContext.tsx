@@ -213,6 +213,15 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
           call: callIndex,
           speakerName: customer?.name ?? scenario.customerName,
         };
+        const latest = stateRef.current;
+        if (
+          latest.scenarioId !== scenario.id ||
+          latest.callIndex !== callIndex ||
+          (latest.callCustomer?.name ?? null) !== (customer?.name ?? null) ||
+          latest.messages.some(item => item.role === "customer" && item.call === callIndex)
+        ) {
+          return;
+        }
         set(current => ({ messages: [...current.messages, message], pending: false }));
         speak(response.reply, scenario.voice);
       } catch (error) {

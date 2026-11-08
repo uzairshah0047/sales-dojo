@@ -14,12 +14,12 @@ import {
 import {
   buildCustomerSystemPrompt,
   buildEvaluationPrompt,
-  buildRunOpeningPrompt,
   normaliseEvaluation,
 } from "./prompts";
 
 const CHAT_MODEL = process.env.SELLIO_CHAT_MODEL || "claude-sonnet-4-6";
 const EVAL_MODEL = process.env.SELLIO_EVAL_MODEL || "claude-sonnet-4-6";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 const clamp = (value: number, min = 0, max = 100) =>
   Math.max(min, Math.min(max, Math.round(value)));
@@ -47,6 +47,10 @@ async function askJson(
   schema: { name: string; schema: Record<string, unknown> },
   maxTokens: number
 ): Promise<Record<string, unknown>> {
+  if (process.env.GEMINI_API_KEY) {
+    return askGeminiJson(messages, schema, maxTokens);
+  }
+
   const result = await invokeLLM({
     model,
     messages,
@@ -65,6 +69,51 @@ async function askJson(
   if (!content || (typeof content === "string" && !content.trim())) {
     throw new Error("Model returned an empty answer");
   }
+  return extractJson(content);
+}
+
+async function askGeminiJson(
+  messages: { role: "system" | "user" | "assistant"; content: string }[],
+  schema: { name: string; schema: Record<string, unknown> },
+  maxTokens: number
+): Promise<Record<string, unknown>> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("Gemini API key is not configured");
+  const system = messages.find(message => message.role === "system")?.content;
+  const contents = messages
+    .filter(message => message.role !== "system")
+    .map(message => ({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: message.content }],
+    }));
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent?key=${encodeURIComponent(key)}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        ...(system ? { systemInstruction: { parts: [{ text: system }] } } : {}),
+        contents,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: maxTokens,
+          responseMimeType: "application/json",
+          responseSchema: schema.schema,
+        },
+      }),
+    }
+  );
+
+  const payload = (await response.json()) as {
+    error?: { message?: string };
+    candidates?: { content?: { parts?: { text?: string }[] } }[];
+  };
+  if (!response.ok) {
+    throw new Error(`Gemini ${response.status}: ${payload.error?.message ?? "request failed"}`);
+  }
+  const content = payload.candidates?.[0]?.content?.parts?.map(part => part.text ?? "").join("");
+  if (!content?.trim()) throw new Error("Gemini returned an empty answer");
   return extractJson(content);
 }
 
@@ -93,6 +142,19 @@ function fallbackOpening(scenario: Scenario): string {
   return scenario.openingLine || "Hei?";
 }
 
+function runOpening(temperament = "", openingStyle = ""): string {
+  const style = `${temperament} ${openingStyle}`.toLowerCase();
+  if (style.includes("stresset") || style.includes("møte") || style.includes("minutt")) return "Hei, jeg har bare et minutt – hva gjelder det?";
+  if (style.includes("irritert") || style.includes("lei av")) return "Ja? Hva gjelder det?";
+  if (style.includes("sarkastisk")) return "Ja vel, hvem er dette?";
+  if (style.includes("stille") || style.includes("nøytralt hallo")) return "Hallo.";
+  if (style.includes("e-post") || style.includes("avvisende")) return "Kan du sende det på e-post?";
+  if (style.includes("brå") || style.includes("nei takk")) return "Ja?";
+  if (style.includes("hissig") || style.includes("ikke vil")) return "Hva gjelder det?";
+  if (style.includes("nysgjerrig") || style.includes("annerledes")) return "Hei, hva er annerledes med dette?";
+  return "Hei, hva gjelder det?";
+}
+
 function offlineChatResponse(
   scenario: Scenario,
   state: { patience: number; interest: number; callIndex: number },
@@ -112,7 +174,7 @@ function offlineChatResponse(
 
   if (userTurns.length === 0) {
     return {
-      reply: runCustomer?.openingStyle?.replace(/^Svar med /i, "") || fallbackOpening(scenario),
+      reply: runCustomer ? runOpening(runCustomer.temperament, runCustomer.openingStyle) : fallbackOpening(scenario),
       interest: state.interest,
       patience: state.patience,
       patienceDelta: 0,
@@ -187,21 +249,9 @@ router.post("/chat", async (req, res) => {
     // The customer opens the conversation before the salesperson has said anything.
     if (userTurns.length === 0) {
       if (scenario.mode === "run" && body.runCustomer) {
-        const raw = await askJson(
-          CHAT_MODEL,
-          [
-            {
-              role: "system",
-              content: buildRunOpeningPrompt(scenario, body.runCustomer, state.callIndex),
-            },
-            { role: "user", content: "Skriv din første replikk." },
-          ],
-          TURN_SCHEMA,
-          300
-        );
         res.json({
-          reply: String(raw.reply ?? "Ja, hallo?"),
-          interest: clamp(Number(raw.interest) || state.interest),
+          reply: runOpening(body.runCustomer.temperament, body.runCustomer.openingStyle),
+          interest: state.interest,
           patience: state.patience,
           patienceDelta: 0,
           ended: false,
